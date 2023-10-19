@@ -1,0 +1,14 @@
+http://localhost:3000/hero
+###
+http://localhost:3000/hero/create
+
+###
+POST http://localhost:3000/hero/create
+Content-Type: application/json
+
+{
+    "id": 4,
+    "name": "Zilong",
+    "type": "Fighter",
+    "avatar": "zilong.jpg"
+}
