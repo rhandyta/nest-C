@@ -7,24 +7,24 @@ POST http://localhost:3000/hero/create
 Content-Type: application/json
 
 {
-    "id": 4,
+    "id": 6,
     "name": "Zilong",
     "type": "Fighter",
     "avatar": "zilong.jpg"
 }
 
 ###
-PATCH http://localhost:3000/hero/update/4
+PATCH http://localhost:3000/hero/update/6
 Content-Type: application/json
 
 {
-    "name": "Zilong",
-    "type": "Fighter",
-    "avatar": "zilong.jpg"
+    "name": "Nana",
+    "type": "Mage",
+    "avatar": "Nana.jpg"
 }
 
 ###
-GET http://localhost:3000/hero/detail/4
+DELETE http://localhost:3000/hero/6
 
 ###
-GET http://localhost:3000/hero/detail/4
+GET http://localhost:3000/hero/detail/2

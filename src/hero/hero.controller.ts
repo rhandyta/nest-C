@@ -1,95 +1,61 @@
 import {Controller, Get, HttpCode, Post, Req, Res, Param, NotFoundException, Body, Patch, Delete} from '@nestjs/common';
 import { CreateHeroDto } from './dto/create-hero.dto';
 import { UpdateHeroDto } from './dto/update-hero.dto';
-
-const heroes = [
-    {
-        id: 1,
-        name: "Akai Wil",
-        type: "Tank",
-        avatar: "akai.jpg"
-    },
-    {
-        id: 2,
-        name: "Lancelot",
-        type: "Assassin",
-        avatar: "lancelot.jpg"
-    },
-    {
-        id: 3,
-        name: "Miya",
-        type: "Markmans",
-        avatar: "miya.jpg"
-    },
-]
+import { HeroService } from './hero.service';
 
 
 @Controller("hero")
 export class HeroController {
 
+    constructor(private heroService: HeroService)
+    {}
+
     @Get('')
     @HttpCode(200)
-    index(@Res() response){
-        return response.json(heroes);
+    index(){
+        return this.heroService.index();
     }
 
     @Get('create')
-    @HttpCode(202)
+    @HttpCode(200)
     create(@Res({passthrough: true}) response): string {
         response.cookie('name', 'kuy1');
-        return 'hero created';
+        return  this.heroService.create();
     }
 
     @Post('create')
     store(@Body() createHeroDto: CreateHeroDto, @Res() res) {
-        const {id, name, type, avatar} = createHeroDto;
-        heroes.push({ 
-            id,
-            name,
-            type,
-            avatar
-        })
-        res.cookie('name', name)
-        return res.status(201).json(createHeroDto)
+        const data = this.heroService.store(createHeroDto);
+        res.cookie('name', createHeroDto.name)
+        return res.status(201).json(data)
     }
 
     @Patch('update/:id')
     update(@Param('id') id: number, @Body() updateHeroDto: UpdateHeroDto) {
-        const heroIdx = this.getById(id);
+        
+        const data = this.heroService.update(id, updateHeroDto);
 
-        heroes[heroIdx].name = updateHeroDto.name
-        heroes[heroIdx].type = updateHeroDto.type
-        heroes[heroIdx].avatar = updateHeroDto.avatar
-        return heroes
+        return data;
     }
 
     @Delete(':id')
-    destroy(@Param('id') id: number) {
-        const heroIdx = this.getById(id)
+    @HttpCode(200)
+    destroy(@Param('id') id: number, @Res() res) {
+        
+        this.heroService.destroy(id);
 
-        heroes.splice(heroIdx, 1);
-
-        return heroes;
-
+        return res.json({
+            message: "Data has been deleted"
+        });
     }
 
 
     @Get('detail/:id')
     show(@Param('id') id: number) {
-        let heroIdx = this.getById(id)
+      
+        const data = this.heroService.show(id);
 
-        return heroes[heroIdx]
-    }
-
-    getById(id: number) {
-        const heroIdx = heroes.findIndex((hero) => hero.id == id);
-
-        
-        if(heroIdx == -1) {
-            throw new NotFoundException("Data tidak ditemukan");
-        }
-
-        return heroIdx;
+        return data;
     }
 
 }
