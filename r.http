@@ -12,3 +12,19 @@ Content-Type: application/json
     "type": "Fighter",
     "avatar": "zilong.jpg"
 }
+
+###
+PATCH http://localhost:3000/hero/update/4
+Content-Type: application/json
+
+{
+    "name": "Zilong",
+    "type": "Fighter",
+    "avatar": "zilong.jpg"
+}
+
+###
+GET http://localhost:3000/hero/detail/4
+
+###
+GET http://localhost:3000/hero/detail/4

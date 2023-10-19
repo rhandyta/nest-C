@@ -1,4 +1,6 @@
-import {Controller, Get, HttpCode, Post, Req, Res, Param, NotFoundException} from '@nestjs/common';
+import {Controller, Get, HttpCode, Post, Req, Res, Param, NotFoundException, Body, Patch, Delete} from '@nestjs/common';
+import { CreateHeroDto } from './dto/create-hero.dto';
+import { UpdateHeroDto } from './dto/update-hero.dto';
 
 const heroes = [
     {
@@ -39,29 +41,55 @@ export class HeroController {
     }
 
     @Post('create')
-    store(@Req() req, @Res() res) {
-        const {id, name, type, avatar} = req.body;
-        heroes.push({
+    store(@Body() createHeroDto: CreateHeroDto, @Res() res) {
+        const {id, name, type, avatar} = createHeroDto;
+        heroes.push({ 
             id,
             name,
             type,
             avatar
         })
         res.cookie('name', name)
-        return res.status(201).json(heroes)
+        return res.status(201).json(createHeroDto)
+    }
+
+    @Patch('update/:id')
+    update(@Param('id') id: number, @Body() updateHeroDto: UpdateHeroDto) {
+        const heroIdx = this.getById(id);
+
+        heroes[heroIdx].name = updateHeroDto.name
+        heroes[heroIdx].type = updateHeroDto.type
+        heroes[heroIdx].avatar = updateHeroDto.avatar
+        return heroes
+    }
+
+    @Delete(':id')
+    destroy(@Param('id') id: number) {
+        const heroIdx = this.getById(id)
+
+        heroes.splice(heroIdx, 1);
+
+        return heroes;
+
     }
 
 
     @Get('detail/:id')
-    show(@Param() params: any) {
-        let heroIdx = heroes.findIndex((item) => item.id == params.id)
+    show(@Param('id') id: number) {
+        let heroIdx = this.getById(id)
 
+        return heroes[heroIdx]
+    }
 
+    getById(id: number) {
+        const heroIdx = heroes.findIndex((hero) => hero.id == id);
+
+        
         if(heroIdx == -1) {
             throw new NotFoundException("Data tidak ditemukan");
         }
 
-        return heroes[heroIdx]
+        return heroIdx;
     }
 
 }
