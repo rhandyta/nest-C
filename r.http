@@ -28,3 +28,18 @@ DELETE http://localhost:3000/hero/6
 
 ###
 GET http://localhost:3000/hero/detail/2
+
+-------------------------------------------------------------
+
+###
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "johndoe1@gmail.com",
+    "password": "123"
+}
+
+###
+GET  http://localhost:3000/user/5
