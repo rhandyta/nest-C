@@ -37,9 +37,18 @@ Content-Type: application/json
 
 {
     "name": "John Doe",
-    "email": "johndoe1@gmail.com",
+    "email": "johndoe2@gmail.com",
     "password": "123"
 }
 
 ###
-GET  http://localhost:3000/user/5
+GET  http://localhost:3000/user/
+
+###
+POST  http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "johndoe2@gmail.com",
+    "password": "123"
+}

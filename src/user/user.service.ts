@@ -9,13 +9,9 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async register(dto: CreateUserDto) {
-    const emailUnique = await this.prisma.user.findUnique({
-      where: {
-        email: dto.email
-      }
-    })
+    const user = await this.findByEmail(dto.email);
 
-    if(emailUnique) {
+    if(user) {
       throw new ConflictException("Data sudah dipakai")
     }
 
@@ -26,8 +22,8 @@ export class UserService {
       },
     });
 
-    const { password, ...user } = newUser;
-    return user;
+    const { password, ...result } = newUser;
+    return result;
   }
 
   create(createUserDto: CreateUserDto) {
@@ -55,5 +51,16 @@ export class UserService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async findByEmail(email: string)  {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    })
+
+    return user
+
   }
 }
